@@ -14,11 +14,7 @@ let g:max_osc52_sequence=100000
 
 " Send a string to the terminal's clipboard using the OSC 52 sequence
 function! SendViaOSC52(str)
-  if match($TERM, 'screen') > -1
-    let osc52 = s:get_OSC52_DCS(a:str)
-  else
-    let osc52 = s:get_OSC52(a:str)
-  endif
+  let osc52 = s:get_OSC52_DCS(a:str)
   let len = strlen(osc52)
   if len < g:max_osc52_sequence
     call s:rawecho(osc52)
@@ -54,7 +50,7 @@ function! s:get_OSC52_DCS(str)
   "  there should be a better way.)
   let b64 = substitute(b64, '/', '\', 'g')
   " Now wrap the whole thing in <start-dcs><start-osc52>...<end-osc52><end-dcs>.
-  let b64 = "\ePtmux;\e\e]52;0;" . b64 . "\x07\e\x5c"
+  let b64 = "\ePtmux;\e\e]52;c;" . b64 . "\x07\e\x5c"
   " echom "b64: " b64
   return b64
 endfun
